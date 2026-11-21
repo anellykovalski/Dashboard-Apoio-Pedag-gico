@@ -328,13 +328,17 @@
       flex-grow: 0;
     }
 
+    .card-box.expanded .heatmap-scroll {
+      max-height: calc(100vh - 210px);
+    }
+
     .card-box.expanded .heatmap-table {
-      font-size: 0.92rem;
+      font-size: 0.85rem;
     }
 
     .card-box.expanded .heatmap-table th,
     .card-box.expanded .heatmap-table td {
-      padding: 12px 8px;
+      padding: 8px 6px;
     }
 
     .card-box.expanded .content-rows {
@@ -371,22 +375,39 @@
     }
 
     /* Estilização do Mapa de Calor */
+    .heatmap-scroll {
+      max-height: 290px;
+      overflow: auto;
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+    }
+
     .heatmap-table {
       width: 100%;
       border-collapse: collapse;
-      font-size: 0.74rem;
-      margin-top: 6px;
+      font-size: 0.73rem;
     }
 
     .heatmap-table th, .heatmap-table td {
       border: 1px solid #e2e8f0;
-      padding: 6px 4px;
+      padding: 5px 4px;
       text-align: center;
+      white-space: nowrap;
     }
 
     .heatmap-table th {
       background-color: #f8fafc;
       font-weight: 700;
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      box-shadow: inset 0 -1px 0 #cbd5e1;
+    }
+
+    .heatmap-table td:first-child,
+    .heatmap-table th:first-child {
+      text-align: left;
+      padding-left: 8px;
     }
 
     .cell-red { background-color: #ffd1d1; color: #990000; font-weight: 600; }
@@ -597,7 +618,7 @@
       </div>
       <div class="kpi-card">
         <div class="kpi-header"><i class="fa-solid fa-rotate-right"></i><span>Média de Tentativas/Form</span></div>
-        <div class="kpi-body"><span class="kpi-value" id="kpiTentativas">3.5</span><i class="fa-solid fa-bullseye kpi-icon-large"></i></div>
+        <div class="kpi-body"><span class="kpi-value" id="kpiTentativas">3.2</span><i class="fa-solid fa-bullseye kpi-icon-large"></i></div>
       </div>
       <div class="kpi-card">
         <div class="kpi-header"><i class="fa-solid fa-shuffle"></i><span>Média de Desordem</span></div>
@@ -605,7 +626,7 @@
       </div>
       <div class="kpi-card">
         <div class="kpi-header"><i class="fa-solid fa-graduation-cap"></i><span>Média de Nota</span></div>
-        <div class="kpi-body"><span class="kpi-value" id="kpiNota">8.5</span><i class="fa-solid fa-trophy kpi-icon-large"></i></div>
+        <div class="kpi-body"><span class="kpi-value" id="kpiNota">7.8</span><i class="fa-solid fa-trophy kpi-icon-large"></i></div>
       </div>
     </div>
 
@@ -617,7 +638,7 @@
         <div class="box-header-flex" style="margin-bottom: 8px;">
           <div class="box-title-area">
             <div class="box-title">Mapa de Calor: Distribuição de notas por conteúdo</div>
-            <div class="box-subtitle">Análise de desempenho da turma por disciplina/conteúdo (A até L)</div>
+            <div class="box-subtitle">Desempenho de <strong id="heatmapAlunosText">30 alunos</strong> da turma por atividade/conteúdo (A até L)</div>
           </div>
           <button class="expand-btn" onclick="toggleExpand('cardHeatmap', this)" title="Ampliar gráfico">
             <i class="fa-solid fa-expand"></i>
@@ -631,7 +652,7 @@
           <div class="legend-item"><div class="legend-color" style="background:#d4edda;"></div><span>Alta (&gt; 7.5)</span></div>
         </div>
 
-        <div style="overflow-x: auto;">
+        <div class="heatmap-scroll">
           <table class="heatmap-table">
             <thead>
               <tr>
@@ -640,38 +661,7 @@
                 <th>MÉDIA ALUNO</th>
               </tr>
             </thead>
-            <tbody id="heatmapBody">
-              <tr>
-                <td><strong>A. Silva</strong></td>
-                <td class="cell-green">8.5</td><td class="cell-green">7.5</td><td class="cell-red">3.0</td><td class="cell-red">4.5</td><td class="cell-green">8.0</td><td class="cell-green">7.5</td><td class="cell-yellow">6.0</td><td class="cell-yellow">5.5</td><td class="cell-green">8.5</td><td class="cell-yellow">6.0</td><td class="cell-yellow">5.5</td><td class="cell-green">8.5</td>
-                <td><strong>6.6</strong></td>
-              </tr>
-              <tr>
-                <td><strong>B. Mendes</strong></td>
-                <td class="cell-yellow">7.0</td><td class="cell-green">7.5</td><td class="cell-red">3.0</td><td class="cell-red">3.5</td><td class="cell-yellow">7.0</td><td class="cell-yellow">7.0</td><td class="cell-yellow">6.0</td><td class="cell-yellow">5.5</td><td class="cell-green">8.0</td><td class="cell-yellow">6.0</td><td class="cell-yellow">7.5</td><td class="cell-yellow">6.0</td>
-                <td><strong>6.2</strong></td>
-              </tr>
-              <tr>
-                <td><strong>C. Dias</strong></td>
-                <td class="cell-red">3.0</td><td class="cell-green">7.5</td><td class="cell-red">2.0</td><td class="cell-red">3.0</td><td class="cell-yellow">7.0</td><td class="cell-yellow">7.0</td><td class="cell-red">3.0</td><td class="cell-red">3.5</td><td class="cell-yellow">7.5</td><td class="cell-yellow">6.5</td><td class="cell-red">4.0</td><td class="cell-yellow">5.0</td>
-                <td><strong>4.9</strong></td>
-              </tr>
-              <tr>
-                <td><strong>D. Fernandes</strong></td>
-                <td class="cell-green">8.0</td><td class="cell-green">7.5</td><td class="cell-red">4.0</td><td class="cell-red">4.5</td><td class="cell-yellow">5.0</td><td class="cell-yellow">7.0</td><td class="cell-yellow">5.0</td><td class="cell-yellow">6.0</td><td class="cell-green">8.0</td><td class="cell-yellow">6.0</td><td class="cell-yellow">5.5</td><td class="cell-yellow">7.0</td>
-                <td><strong>6.1</strong></td>
-              </tr>
-              <tr>
-                <td><strong>E. Costa</strong></td>
-                <td class="cell-yellow">7.0</td><td class="cell-green">7.5</td><td class="cell-yellow">7.0</td><td class="cell-yellow">5.0</td><td class="cell-green">8.0</td><td class="cell-yellow">7.0</td><td class="cell-yellow">6.0</td><td class="cell-yellow">5.5</td><td class="cell-green">8.0</td><td class="cell-yellow">6.0</td><td class="cell-red">4.0</td><td class="cell-green">8.5</td>
-                <td><strong>6.6</strong></td>
-              </tr>
-              <tr>
-                <td><strong>F. Santos</strong></td>
-                <td class="cell-green">8.0</td><td class="cell-green">7.5</td><td class="cell-red">3.0</td><td class="cell-yellow">6.0</td><td class="cell-yellow">6.5</td><td class="cell-yellow">7.0</td><td class="cell-yellow">5.5</td><td class="cell-yellow">5.5</td><td class="cell-green">8.0</td><td class="cell-yellow">6.5</td><td class="cell-red">3.0</td><td class="cell-yellow">7.0</td>
-                <td><strong>6.1</strong></td>
-              </tr>
-            </tbody>
+            <tbody id="heatmapBody"></tbody>
           </table>
         </div>
       </div>
@@ -681,7 +671,7 @@
         <div class="box-header-flex">
           <div class="box-title-area">
             <div class="box-title">Distribuição de Alunos por Faixa de Desempenho</div>
-            <div class="box-subtitle">Concentração da turma baseada na porcentagem de acertos geral</div>
+            <div class="box-subtitle">Quantidade de alunos da turma por faixa de aproveitamento geral</div>
           </div>
           <button class="expand-btn" onclick="toggleExpand('cardPerformance', this)" title="Ampliar gráfico">
             <i class="fa-solid fa-expand"></i>
@@ -744,63 +734,129 @@
   <script>
     Chart.register(ChartDataLabels);
 
+    const nomesBase = [
+      'A. Silva', 'B. Mendes', 'C. Dias', 'D. Fernandes', 'E. Costa', 'F. Santos',
+      'G. Almeida', 'H. Rocha', 'I. Oliveira', 'J. Lima', 'K. Carvalho', 'L. Ribeiro',
+      'M. Pereira', 'N. Gomes', 'O. Martins', 'P. Araújo', 'Q. Barbosa', 'R. Melo',
+      'S. Castro', 'T. Pinto', 'U. Monteiro', 'V. Cardoso', 'W. Teixeira', 'X. Correia',
+      'Y. Duarte', 'Z. Freitas', 'A. Souza', 'B. Nogueira', 'C. Campos', 'D. Ramos',
+      'E. Vieira', 'F. Azevedo'
+    ];
+
+    // Gera notas determinísticas e coerentes para todos os alunos da turma
+    function gerarTurmaHeatmap(totalAlunos, baseOffset, seed) {
+      const lista = [];
+      for (let i = 0; i < totalAlunos; i++) {
+        // Perfil individual do aluno (alguns com desempenho mais alto, médio ou com mais dificuldades)
+        const perfilAluno = ((i * 7 + seed * 3) % 10) / 10; // 0.0 a 0.9
+        const notas = [];
+
+        for (let c = 0; c < 12; c++) {
+          // Alguns conteúdos (como C, D e K) têm leve tendência menor, outros (como A, B, I) maior
+          const variacaoConteudo = Math.sin((i + 1) * (c + 2) + seed) * 1.1;
+          const ajusteConteudo = (c === 2 || c === 3 || c === 10) ? -0.7 : (c === 0 || c === 1 || c === 8) ? 0.5 : 0;
+          let nota = 5.4 + baseOffset + (perfilAluno * 2.6) + variacaoConteudo + ajusteConteudo;
+          nota = Math.max(2.0, Math.min(9.8, nota));
+          notas.push(Number(nota.toFixed(1)));
+        }
+
+        lista.push({
+          aluno: nomesBase[i % nomesBase.length],
+          notas
+        });
+      }
+      return lista;
+    }
+
     const datasetsPorFiltro = {
       '3A_30d': {
         alunos: 30,
-        kpis: { confusao: '15%', tempoResp: '12m 30s', visitas: '45m', tentativas: '3.5', desordem: '12%', nota: '8.5' },
-        faixas: [3, 8, 25, 45, 19],
+        kpis: { confusao: '15%', tempoResp: '12m 30s', visitas: '45m', tentativas: '3.2', desordem: '12%', nota: '7.8' },
+        faixas: [0, 2, 5, 13, 10],
         vark: [35, 20, 18, 27],
         disciplinas: [
-          { nome: 'Álgebra e Funções', alto: 21, medio: 7, baixo: 2 },
+          { nome: 'Álgebra e Funções', alto: 18, medio: 9, baixo: 3 },
           { nome: 'Geometria Espacial', alto: 12, medio: 13, baixo: 5 },
-          { nome: 'História Antiga', alto: 4, medio: 10, baixo: 16 },
-          { nome: 'Física: Cinemática', alto: 9, medio: 13, baixo: 8 },
-          { nome: 'Biologia Celular', alto: 18, medio: 9, baixo: 3 }
-        ]
+          { nome: 'História Antiga', alto: 8, medio: 14, baixo: 8 },
+          { nome: 'Física: Cinemática', alto: 10, medio: 13, baixo: 7 },
+          { nome: 'Biologia Celular', alto: 16, medio: 11, baixo: 3 }
+        ],
+        heatmap: gerarTurmaHeatmap(30, 0.5, 1)
       },
       '3A_7d': {
         alunos: 30,
-        kpis: { confusao: '11%', tempoResp: '10m 15s', visitas: '32m', tentativas: '2.1', desordem: '9%', nota: '8.8' },
-        faixas: [1, 4, 18, 52, 25],
+        kpis: { confusao: '11%', tempoResp: '10m 15s', visitas: '32m', tentativas: '2.1', desordem: '9%', nota: '8.3' },
+        faixas: [0, 1, 3, 12, 14],
         vark: [35, 20, 18, 27],
         disciplinas: [
-          { nome: 'Álgebra e Funções', alto: 24, medio: 5, baixo: 1 },
+          { nome: 'Álgebra e Funções', alto: 21, medio: 7, baixo: 2 },
           { nome: 'Geometria Espacial', alto: 15, medio: 11, baixo: 4 },
-          { nome: 'História Antiga', alto: 8, medio: 12, baixo: 10 },
-          { nome: 'Física: Cinemática', alto: 12, medio: 12, baixo: 6 },
-          { nome: 'Biologia Celular', alto: 20, medio: 8, baixo: 2 }
-        ]
+          { nome: 'História Antiga', alto: 11, medio: 14, baixo: 5 },
+          { nome: 'Física: Cinemática', alto: 13, medio: 12, baixo: 5 },
+          { nome: 'Biologia Celular', alto: 19, medio: 9, baixo: 2 }
+        ],
+        heatmap: gerarTurmaHeatmap(30, 1.0, 2)
       },
       '2B_30d': {
         alunos: 28,
-        kpis: { confusao: '22%', tempoResp: '15m 40s', visitas: '38m', tentativas: '4.2', desordem: '19%', nota: '7.4' },
-        faixas: [5, 14, 32, 35, 14],
-        vark: [28, 25, 15, 32],
+        kpis: { confusao: '22%', tempoResp: '15m 40s', visitas: '38m', tentativas: '4.1', desordem: '19%', nota: '6.9' },
+        faixas: [1, 3, 7, 11, 6],
+        vark: [28, 24, 16, 32],
         disciplinas: [
-          { nome: 'Álgebra e Funções', alto: 14, medio: 9, baixo: 5 },
-          { nome: 'Geometria Espacial', alto: 9, medio: 11, baixo: 8 },
-          { nome: 'História Antiga', alto: 6, medio: 10, baixo: 12 },
-          { nome: 'Física: Cinemática', alto: 7, medio: 10, baixo: 11 },
-          { nome: 'Biologia Celular', alto: 15, medio: 8, baixo: 5 }
-        ]
+          { nome: 'Álgebra e Funções', alto: 11, medio: 11, baixo: 6 },
+          { nome: 'Geometria Espacial', alto: 8, medio: 12, baixo: 8 },
+          { nome: 'História Antiga', alto: 6, medio: 12, baixo: 10 },
+          { nome: 'Física: Cinemática', alto: 7, medio: 12, baixo: 9 },
+          { nome: 'Biologia Celular', alto: 12, medio: 11, baixo: 5 }
+        ],
+        heatmap: gerarTurmaHeatmap(28, -0.3, 3)
       },
       '1C_30d': {
         alunos: 32,
-        kpis: { confusao: '18%', tempoResp: '14m 05s', visitas: '50m', tentativas: '3.8', desordem: '16%', nota: '7.9' },
-        faixas: [4, 10, 28, 40, 18],
+        kpis: { confusao: '18%', tempoResp: '14m 05s', visitas: '50m', tentativas: '3.6', desordem: '15%', nota: '7.4' },
+        faixas: [0, 3, 7, 13, 9],
         vark: [40, 18, 22, 20],
         disciplinas: [
-          { nome: 'Álgebra e Funções', alto: 19, medio: 8, baixo: 5 },
-          { nome: 'Geometria Espacial', alto: 14, medio: 12, baixo: 6 },
-          { nome: 'História Antiga', alto: 10, medio: 12, baixo: 10 },
-          { nome: 'Física: Cinemática', alto: 11, medio: 13, baixo: 8 },
-          { nome: 'Biologia Celular', alto: 21, medio: 7, baixo: 4 }
-        ]
+          { nome: 'Álgebra e Funções', alto: 16, medio: 11, baixo: 5 },
+          { nome: 'Geometria Espacial', alto: 12, medio: 13, baixo: 7 },
+          { nome: 'História Antiga', alto: 9, medio: 14, baixo: 9 },
+          { nome: 'Física: Cinemática', alto: 10, medio: 14, baixo: 8 },
+          { nome: 'Biologia Celular', alto: 17, medio: 11, baixo: 4 }
+        ],
+        heatmap: gerarTurmaHeatmap(32, 0.2, 4)
       }
     };
 
     let perfChartInstance = null;
     let varkChartInstance = null;
+
+    function getCellClass(nota) {
+      if (nota < 5.0) return 'cell-red';
+      if (nota <= 7.5) return 'cell-yellow';
+      return 'cell-green';
+    }
+
+    function renderHeatmap(rows) {
+      const tbody = document.getElementById('heatmapBody');
+      tbody.innerHTML = '';
+
+      rows.forEach(item => {
+        const soma = item.notas.reduce((acc, n) => acc + n, 0);
+        const media = (soma / item.notas.length).toFixed(1);
+
+        const cellsHTML = item.notas
+          .map(n => `<td class="${getCellClass(n)}">${n.toFixed(1)}</td>`)
+          .join('');
+
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td><strong>${item.aluno}</strong></td>
+          ${cellsHTML}
+          <td><strong>${media}</strong></td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
 
     function renderDisciplinas(lista) {
       const container = document.getElementById('contentPerformanceContainer');
@@ -836,6 +892,8 @@
     }
 
     function initCharts(data) {
+      const maxAlunos = Math.max(...data.faixas) + 4;
+
       const ctxPerf = document.getElementById('performanceChart').getContext('2d');
       perfChartInstance = new Chart(ctxPerf, {
         type: 'bar',
@@ -856,13 +914,13 @@
             datalabels: {
               anchor: 'end',
               align: 'top',
-              formatter: value => value + ' alunos',
+              formatter: value => value + (value === 1 ? ' aluno' : ' alunos'),
               color: '#2c3e50',
               font: { weight: 'bold', size: 10 }
             }
           },
           scales: {
-            y: { beginAtZero: true, max: 60, grid: { color: '#f0f0f0' } },
+            y: { beginAtZero: true, max: maxAlunos, ticks: { stepSize: 4 }, grid: { color: '#f0f0f0' } },
             x: { grid: { display: false } }
           }
         }
@@ -916,21 +974,35 @@
       const key = `${classVal}_${periodVal}`;
       let selectedData = datasetsPorFiltro[key] || datasetsPorFiltro[`${classVal}_30d`] || datasetsPorFiltro['3A_30d'];
 
-      let factor = 1;
-      if (periodVal === 'bim1') factor = 0.95;
-      if (periodVal === 'sem1') factor = 1.05;
+      let notaDelta = 0;
+      let tentDelta = 0;
+      let heatmapAjuste = 0;
+      if (!datasetsPorFiltro[key]) {
+        if (periodVal === 'bim1') { notaDelta = -0.2; tentDelta = 0.2; heatmapAjuste = -0.2; }
+        if (periodVal === 'sem1') { notaDelta = 0.2; tentDelta = -0.2; heatmapAjuste = 0.2; }
+      }
 
       document.getElementById('kpiConfusao').textContent = selectedData.kpis.confusao;
       document.getElementById('kpiTempoResp').textContent = selectedData.kpis.tempoResp;
       document.getElementById('kpiVisitas').textContent = selectedData.kpis.visitas;
-      document.getElementById('kpiTentativas').textContent = (parseFloat(selectedData.kpis.tentativas) * factor).toFixed(1);
+      document.getElementById('kpiTentativas').textContent = Math.max(1.0, (parseFloat(selectedData.kpis.tentativas) + tentDelta)).toFixed(1);
       document.getElementById('kpiDesordem').textContent = selectedData.kpis.desordem;
-      document.getElementById('kpiNota').textContent = Math.min(10, (parseFloat(selectedData.kpis.nota) * factor)).toFixed(1);
+      document.getElementById('kpiNota').textContent = Math.min(10, Math.max(0, (parseFloat(selectedData.kpis.nota) + notaDelta))).toFixed(1);
       document.getElementById('totalAlunosText').textContent = `${selectedData.alunos} alunos`;
+      document.getElementById('heatmapAlunosText').textContent = `${selectedData.alunos} alunos`;
+
+      const heatmapRows = heatmapAjuste === 0
+        ? selectedData.heatmap
+        : selectedData.heatmap.map(item => ({
+            aluno: item.aluno,
+            notas: item.notas.map(n => Number(Math.max(2.0, Math.min(9.8, n + heatmapAjuste)).toFixed(1)))
+          }));
 
       renderDisciplinas(selectedData.disciplinas);
+      renderHeatmap(heatmapRows);
 
       perfChartInstance.data.datasets[0].data = selectedData.faixas;
+      perfChartInstance.options.scales.y.max = Math.max(...selectedData.faixas) + 4;
       perfChartInstance.update();
 
       varkChartInstance.data.datasets[0].data = selectedData.vark;
@@ -987,6 +1059,7 @@
 
     const initialData = datasetsPorFiltro['3A_30d'];
     renderDisciplinas(initialData.disciplinas);
+    renderHeatmap(initialData.heatmap);
     initCharts(initialData);
   </script>
 
