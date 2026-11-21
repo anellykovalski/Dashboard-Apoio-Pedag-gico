@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Adapt Learn - Dashboard Completo</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0"></script>
+  
+  <style>
+    :root {
+      --primary-green: #7ab83c;
+      --dark-green: #2e8b57;
+      --light-bg: #f4f6f8;
+      --card-bg: #ffffff;
+      --border-green: #38764a;
+      --text-dark: #2c3e50;
+      --text-muted: #6c757d;
+      --header-bg: #e2e5e8;
+      
+      --status-green: #10b981;
+      --status-blue: #3b82f6;
+      --status-red: #ef4444;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background-color: var(--light-bg);
+      color: var(--text-dark);
+      padding: 12px;
+    }
+
+    .dashboard-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    /* Cabeçalho Enriquecido */
+    .app-header {
+      background-color: var(--header-bg);
+      padding: 12px 24px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+      box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+    }
+
+    .header-logo-area {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .header-logo-area i.fa-puzzle-piece {
+      color: var(--primary-green);
+      font-size: 1.8rem;
+    }
+
+    .header-title {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: var(--primary-green);
+      letter-spacing: -0.5px;
+    }
+
+    /* Barra de Filtros e Contexto da Turma */
+    .header-controls {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .filter-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background-color: #ffffff;
+      padding: 6px 12px;
+      border-radius: 8px;
+      border: 1px solid #cbd5e1;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+    }
+
+    .filter-group i {
+      color: var(--dark-green);
+      font-size: 0.9rem;
+    }
+
+    .filter-group label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+
+    .filter-select {
+      border: none;
+      background: transparent;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--text-dark);
+      cursor: pointer;
+      outline: none;
+    }
+
+    /* Informações do Professor */
+    .teacher-profile-box {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background-color: rgba(255, 255, 255, 0.75);
+      padding: 6px 14px;
+      border-radius: 30px;
+      border: 1px solid #d1d5db;
+    }
+
+    .teacher-info {
+      text-align: right;
+      line-height: 1.2;
+    }
+
+    .teacher-name {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--text-dark);
+      display: block;
+    }
+
+    .teacher-role {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      display: block;
+    }
+
+    .header-profile {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      border: 2px solid #fff;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #2e6db4;
+      color: white;
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+
+    /* Faixa de Status da Turma Selecionada */
+    .context-banner {
+      background-color: #ffffff;
+      border-left: 4px solid var(--dark-green);
+      padding: 10px 16px;
+      border-radius: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      font-size: 0.82rem;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+    }
+
+    .context-badge {
+      background-color: #e6f4ea;
+      color: var(--dark-green);
+      padding: 3px 10px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 0.75rem;
+    }
+
+    /* 1. Seção de KPIs (6 Cards em linha) */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 12px;
+    }
+
+    .kpi-card {
+      background-color: var(--card-bg);
+      border: 2px solid var(--border-green);
+      border-radius: 10px;
+      padding: 12px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.04);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .kpi-header {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-dark);
+    }
+
+    .kpi-header i {
+      color: var(--border-green);
+      font-size: 0.85rem;
+    }
+
+    .kpi-body {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-top: 8px;
+    }
+
+    .kpi-value {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--dark-green);
+      line-height: 1;
+    }
+
+    .kpi-icon-large {
+      font-size: 1.3rem;
+      color: #5a6268;
+      opacity: 0.8;
+    }
+
+    /* 2. Grades assimétricas */
+    .row-grid {
+      display: grid;
+      grid-template-columns: 1.5fr 0.9fr;
+      gap: 20px;
+      align-items: stretch;
+    }
+
+    .bottom-grid {
+      display: grid;
+      grid-template-columns: 1.35fr 0.85fr;
+      gap: 20px;
+      align-items: stretch;
+    }
+
+    .card-box {
+      background-color: var(--card-bg);
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+      border: 1px solid #e0e6ed;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    .box-header-flex {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .box-title-area {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .box-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text-dark);
+    }
+
+    .box-subtitle {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    /* Botão de Expandir Gráfico */
+    .expand-btn {
+      background-color: #f8fafc;
+      border: 1px solid #cbd5e1;
+      color: var(--text-muted);
+      width: 32px;
+      height: 32px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .expand-btn:hover {
+      background-color: var(--dark-green);
+      color: #ffffff;
+      border-color: var(--dark-green);
+    }
+
+    /* Modo Expandido (Modal em tela cheia) */
+    .card-box.expanded {
+      position: fixed;
+      top: 24px;
+      left: 24px;
+      right: 24px;
+      bottom: 24px;
+      z-index: 1000;
+      margin: 0;
+      overflow: auto;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+    }
+
+    .card-box.expanded .chart-wrapper {
+      height: calc(100vh - 170px);
+      min-height: 360px;
+      flex-grow: 0;
+    }
+
+    .card-box.expanded .heatmap-table {
+      font-size: 0.92rem;
+    }
+
+    .card-box.expanded .heatmap-table th,
+    .card-box.expanded .heatmap-table td {
+      padding: 12px 8px;
+    }
+
+    .card-box.expanded .content-rows {
+      gap: 20px;
+    }
+
+    .card-box.expanded .content-name {
+      width: 190px;
+      font-size: 0.95rem;
+    }
+
+    .card-box.expanded .student-icons-grid i {
+      font-size: 1.05rem;
+    }
+
+    .modal-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background-color: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(2px);
+      z-index: 999;
+    }
+
+    .modal-backdrop.active {
+      display: block;
+    }
+
+    .chart-wrapper {
+      position: relative;
+      flex-grow: 1;
+      min-height: 220px;
+      width: 100%;
+    }
+
+    /* Estilização do Mapa de Calor */
+    .heatmap-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.74rem;
+      margin-top: 6px;
+    }
+
+    .heatmap-table th, .heatmap-table td {
+      border: 1px solid #e2e8f0;
+      padding: 6px 4px;
+      text-align: center;
+    }
+
+    .heatmap-table th {
+      background-color: #f8fafc;
+      font-weight: 700;
+    }
+
+    .cell-red { background-color: #ffd1d1; color: #990000; font-weight: 600; }
+    .cell-yellow { background-color: #ffeeb3; color: #806600; font-weight: 600; }
+    .cell-green { background-color: #d4edda; color: #155724; font-weight: 600; }
+
+    .legend-box {
+      display: flex;
+      gap: 12px;
+      font-size: 0.75rem;
+      align-items: center;
+      margin-bottom: 8px;
+      flex-wrap: wrap;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .legend-color {
+      width: 12px;
+      height: 12px;
+      border-radius: 3px;
+    }
+
+    /* Desempenho por Conteúdo */
+    .pill-legend {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      background-color: #f8fafc;
+      border: 1px solid #e2e8f0;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-dark);
+    }
+
+    .pill-dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      margin-right: 4px;
+    }
+
+    .content-rows {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      justify-content: space-between;
+      flex-grow: 1;
+      margin-top: 8px;
+    }
+
+    .content-row-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #f1f5f9;
+    }
+
+    .content-row-item:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .content-name {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-dark);
+      width: 135px;
+      flex-shrink: 0;
+    }
+
+    .student-icons-wrapper {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      min-width: 0;
+    }
+
+    .student-icons-grid {
+      display: grid;
+      grid-template-columns: repeat(var(--cols, 15), 18px);
+      gap: 6px 6px;
+      justify-items: center;
+      align-items: center;
+    }
+
+    .student-icons-grid i {
+      font-size: 0.9rem;
+      line-height: 1;
+      text-align: center;
+    }
+
+    .st-green { color: var(--status-green); }
+    .st-blue { color: var(--status-blue); }
+    .st-red { color: var(--status-red); }
+
+    .stats-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background-color: #ffffff;
+      border: 1px solid #e2e8f0;
+      padding: 4px 10px;
+      border-radius: 14px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      flex-shrink: 0;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+    }
+
+    .stats-pill span {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+    }
+
+    .stats-divider {
+      color: #cbd5e1;
+      font-weight: 400;
+    }
+
+    /* Responsividade */
+    @media (max-width: 1150px) {
+      .kpi-grid { grid-template-columns: repeat(3, 1fr); }
+      .row-grid, .bottom-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Fundo escuro para quando um gráfico estiver expandido -->
+  <div class="modal-backdrop" id="modalBackdrop" onclick="closeExpandedCard()"></div>
+
+  <div class="dashboard-container">
+    
+    <!-- Cabeçalho com Filtros, Turma e Dados do Professor -->
+    <header class="app-header">
+      <div class="header-logo-area">
+        <i class="fa-solid fa-puzzle-piece"></i>
+        <span class="header-title">Adapt Learn</span>
+      </div>
+
+      <!-- Filtros de Turma e Período -->
+      <div class="header-controls">
+        <div class="filter-group">
+          <i class="fa-solid fa-users-rectangle"></i>
+          <label for="classSelect">Turma:</label>
+          <select id="classSelect" class="filter-select" onchange="updateDashboardData()">
+            <option value="3A" selected>3º Ano A - Ensino Médio (30 alunos)</option>
+            <option value="2B">2º Ano B - Ensino Médio (28 alunos)</option>
+            <option value="1C">1º Ano C - Ensino Médio (32 alunos)</option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <i class="fa-regular fa-calendar-days"></i>
+          <label for="periodSelect">Período:</label>
+          <select id="periodSelect" class="filter-select" onchange="updateDashboardData()">
+            <option value="7d">Últimos 7 dias</option>
+            <option value="30d" selected>Últimos 30 dias</option>
+            <option value="bim1">1º Bimestre (2026)</option>
+            <option value="sem1">1º Semestre (2026)</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Perfil do Professor -->
+      <div class="teacher-profile-box" title="Perfil do Docente">
+        <div class="teacher-info">
+          <span class="teacher-name">Prof.ª Mariana Costa</span>
+          <span class="teacher-role">Ciências Exatas e da Natureza • Colégio Estadual</span>
+        </div>
+        <div class="header-profile">MC</div>
+      </div>
+    </header>
+
+    <!-- Faixa informativa da seleção atual -->
+    <div class="context-banner">
+      <div>
+        <i class="fa-solid fa-circle-info" style="color: var(--dark-green); margin-right: 6px;"></i>
+        Exibindo indicadores pedagógicos da turma <strong id="bannerClass">3º Ano A - Ensino Médio</strong> no recorte <strong id="bannerPeriod">Últimos 30 dias</strong>.
+      </div>
+      <span class="context-badge" id="bannerSync"><i class="fa-solid fa-rotate"></i> Sincronizado com Moodle</span>
+    </div>
+
+    <!-- 1. Linha de KPIs (6 Cartões) -->
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-header"><i class="fa-solid fa-circle-question"></i><span>Nível de Confusão Médio</span></div>
+        <div class="kpi-body"><span class="kpi-value" id="kpiConfusao">15%</span><i class="fa-solid fa-brain kpi-icon-large"></i></div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-header"><i class="fa-regular fa-clock"></i><span>Tempo Médio de Resposta</span></div>
+        <div class="kpi-body"><span class="kpi-value" id="kpiTempoResp">12m 30s</span><i class="fa-solid fa-stopwatch kpi-icon-large"></i></div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-header"><i class="fa-solid fa-eye"></i><span>Tempo Médio em Visitas</span></div>
+        <div class="kpi-body"><span class="kpi-value" id="kpiVisitas">45m</span><i class="fa-solid fa-user-clock kpi-icon-large"></i></div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-header"><i class="fa-solid fa-rotate-right"></i><span>Média de Tentativas/Form</span></div>
+        <div class="kpi-body"><span class="kpi-value" id="kpiTentativas">3.5</span><i class="fa-solid fa-bullseye kpi-icon-large"></i></div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-header"><i class="fa-solid fa-shuffle"></i><span>Média de Desordem</span></div>
+        <div class="kpi-body"><span class="kpi-value" id="kpiDesordem">12%</span><i class="fa-solid fa-chart-line kpi-icon-large"></i></div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-header"><i class="fa-solid fa-graduation-cap"></i><span>Média de Nota</span></div>
+        <div class="kpi-body"><span class="kpi-value" id="kpiNota">8.5</span><i class="fa-solid fa-trophy kpi-icon-large"></i></div>
+      </div>
+    </div>
+
+    <!-- 2. Linha Intermediária: Mapa de Calor & Distribuição de Desempenho -->
+    <div class="row-grid">
+      
+      <!-- Mapa de Calor -->
+      <div class="card-box" id="cardHeatmap">
+        <div class="box-header-flex" style="margin-bottom: 8px;">
+          <div class="box-title-area">
+            <div class="box-title">Mapa de Calor: Distribuição de notas por conteúdo</div>
+            <div class="box-subtitle">Análise de desempenho da turma por disciplina/conteúdo (A até L)</div>
+          </div>
+          <button class="expand-btn" onclick="toggleExpand('cardHeatmap', this)" title="Ampliar gráfico">
+            <i class="fa-solid fa-expand"></i>
+          </button>
+        </div>
+        
+        <div class="legend-box">
+          <span><strong>REGRA DE COR:</strong></span>
+          <div class="legend-item"><div class="legend-color" style="background:#ffd1d1;"></div><span>Baixa (&lt; 5.0)</span></div>
+          <div class="legend-item"><div class="legend-color" style="background:#ffeeb3;"></div><span>Média (5.0 a 7.5)</span></div>
+          <div class="legend-item"><div class="legend-color" style="background:#d4edda;"></div><span>Alta (&gt; 7.5)</span></div>
+        </div>
+
+        <div style="overflow-x: auto;">
+          <table class="heatmap-table">
+            <thead>
+              <tr>
+                <th>ALUNO</th>
+                <th>A</th><th>B</th><th>C</th><th>D</th><th>E</th><th>F</th><th>G</th><th>H</th><th>I</th><th>J</th><th>K</th><th>L</th>
+                <th>MÉDIA ALUNO</th>
+              </tr>
+            </thead>
+            <tbody id="heatmapBody">
+              <tr>
+                <td><strong>A. Silva</strong></td>
+                <td class="cell-green">8.5</td><td class="cell-green">7.5</td><td class="cell-red">3.0</td><td class="cell-red">4.5</td><td class="cell-green">8.0</td><td class="cell-green">7.5</td><td class="cell-yellow">6.0</td><td class="cell-yellow">5.5</td><td class="cell-green">8.5</td><td class="cell-yellow">6.0</td><td class="cell-yellow">5.5</td><td class="cell-green">8.5</td>
+                <td><strong>6.6</strong></td>
+              </tr>
+              <tr>
+                <td><strong>B. Mendes</strong></td>
+                <td class="cell-yellow">7.0</td><td class="cell-green">7.5</td><td class="cell-red">3.0</td><td class="cell-red">3.5</td><td class="cell-yellow">7.0</td><td class="cell-yellow">7.0</td><td class="cell-yellow">6.0</td><td class="cell-yellow">5.5</td><td class="cell-green">8.0</td><td class="cell-yellow">6.0</td><td class="cell-yellow">7.5</td><td class="cell-yellow">6.0</td>
+                <td><strong>6.2</strong></td>
+              </tr>
+              <tr>
+                <td><strong>C. Dias</strong></td>
+                <td class="cell-red">3.0</td><td class="cell-green">7.5</td><td class="cell-red">2.0</td><td class="cell-red">3.0</td><td class="cell-yellow">7.0</td><td class="cell-yellow">7.0</td><td class="cell-red">3.0</td><td class="cell-red">3.5</td><td class="cell-yellow">7.5</td><td class="cell-yellow">6.5</td><td class="cell-red">4.0</td><td class="cell-yellow">5.0</td>
+                <td><strong>4.9</strong></td>
+              </tr>
+              <tr>
+                <td><strong>D. Fernandes</strong></td>
+                <td class="cell-green">8.0</td><td class="cell-green">7.5</td><td class="cell-red">4.0</td><td class="cell-red">4.5</td><td class="cell-yellow">5.0</td><td class="cell-yellow">7.0</td><td class="cell-yellow">5.0</td><td class="cell-yellow">6.0</td><td class="cell-green">8.0</td><td class="cell-yellow">6.0</td><td class="cell-yellow">5.5</td><td class="cell-yellow">7.0</td>
+                <td><strong>6.1</strong></td>
+              </tr>
+              <tr>
+                <td><strong>E. Costa</strong></td>
+                <td class="cell-yellow">7.0</td><td class="cell-green">7.5</td><td class="cell-yellow">7.0</td><td class="cell-yellow">5.0</td><td class="cell-green">8.0</td><td class="cell-yellow">7.0</td><td class="cell-yellow">6.0</td><td class="cell-yellow">5.5</td><td class="cell-green">8.0</td><td class="cell-yellow">6.0</td><td class="cell-red">4.0</td><td class="cell-green">8.5</td>
+                <td><strong>6.6</strong></td>
+              </tr>
+              <tr>
+                <td><strong>F. Santos</strong></td>
+                <td class="cell-green">8.0</td><td class="cell-green">7.5</td><td class="cell-red">3.0</td><td class="cell-yellow">6.0</td><td class="cell-yellow">6.5</td><td class="cell-yellow">7.0</td><td class="cell-yellow">5.5</td><td class="cell-yellow">5.5</td><td class="cell-green">8.0</td><td class="cell-yellow">6.5</td><td class="cell-red">3.0</td><td class="cell-yellow">7.0</td>
+                <td><strong>6.1</strong></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Distribuição de Desempenho -->
+      <div class="card-box" id="cardPerformance">
+        <div class="box-header-flex">
+          <div class="box-title-area">
+            <div class="box-title">Distribuição de Alunos por Faixa de Desempenho</div>
+            <div class="box-subtitle">Concentração da turma baseada na porcentagem de acertos geral</div>
+          </div>
+          <button class="expand-btn" onclick="toggleExpand('cardPerformance', this)" title="Ampliar gráfico">
+            <i class="fa-solid fa-expand"></i>
+          </button>
+        </div>
+        <div class="chart-wrapper">
+          <canvas id="performanceChart"></canvas>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- 3. Linha Inferior: Desempenho por Conteúdo & Estilos de Aprendizagem VARK -->
+    <div class="bottom-grid">
+      
+      <!-- Desempenho por Conteúdo -->
+      <div class="card-box" id="cardContent">
+        <div class="box-header-flex">
+          <div class="box-title-area">
+            <div class="box-title">Desempenho por Conteúdo</div>
+            <div class="box-subtitle">Análise visual da distribuição de notas de <strong id="totalAlunosText">30 alunos</strong> por disciplina.</div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+            <div class="pill-legend">
+              <span><span class="pill-dot" style="background: var(--status-green);"></span>Alto (8-10)</span>
+              <span><span class="pill-dot" style="background: var(--status-blue);"></span>Médio (6-7,9)</span>
+              <span><span class="pill-dot" style="background: var(--status-red);"></span>Baixo (&lt; 6)</span>
+            </div>
+            <button class="expand-btn" onclick="toggleExpand('cardContent', this)" title="Ampliar gráfico">
+              <i class="fa-solid fa-expand"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="content-rows" id="contentPerformanceContainer">
+          <!-- Gerado via JS -->
+        </div>
+      </div>
+
+      <!-- Gráfico de Pizza Colorido de Estilos de Aprendizagem VARK -->
+      <div class="card-box" id="cardVark">
+        <div class="box-header-flex">
+          <div class="box-title-area">
+            <div class="box-title">Estilos de Aprendizagem (Modelo VARK)</div>
+            <div class="box-subtitle">Distribuição percentual dos perfis predominantes na turma</div>
+          </div>
+          <button class="expand-btn" onclick="toggleExpand('cardVark', this)" title="Ampliar gráfico">
+            <i class="fa-solid fa-expand"></i>
+          </button>
+        </div>
+        <div class="chart-wrapper">
+          <canvas id="varkChart"></canvas>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <script>
+    Chart.register(ChartDataLabels);
+
+    const datasetsPorFiltro = {
+      '3A_30d': {
+        alunos: 30,
+        kpis: { confusao: '15%', tempoResp: '12m 30s', visitas: '45m', tentativas: '3.5', desordem: '12%', nota: '8.5' },
+        faixas: [3, 8, 25, 45, 19],
+        vark: [35, 20, 18, 27],
+        disciplinas: [
+          { nome: 'Álgebra e Funções', alto: 21, medio: 7, baixo: 2 },
+          { nome: 'Geometria Espacial', alto: 12, medio: 13, baixo: 5 },
+          { nome: 'História Antiga', alto: 4, medio: 10, baixo: 16 },
+          { nome: 'Física: Cinemática', alto: 9, medio: 13, baixo: 8 },
+          { nome: 'Biologia Celular', alto: 18, medio: 9, baixo: 3 }
+        ]
+      },
+      '3A_7d': {
+        alunos: 30,
+        kpis: { confusao: '11%', tempoResp: '10m 15s', visitas: '32m', tentativas: '2.1', desordem: '9%', nota: '8.8' },
+        faixas: [1, 4, 18, 52, 25],
+        vark: [35, 20, 18, 27],
+        disciplinas: [
+          { nome: 'Álgebra e Funções', alto: 24, medio: 5, baixo: 1 },
+          { nome: 'Geometria Espacial', alto: 15, medio: 11, baixo: 4 },
+          { nome: 'História Antiga', alto: 8, medio: 12, baixo: 10 },
+          { nome: 'Física: Cinemática', alto: 12, medio: 12, baixo: 6 },
+          { nome: 'Biologia Celular', alto: 20, medio: 8, baixo: 2 }
+        ]
+      },
+      '2B_30d': {
+        alunos: 28,
+        kpis: { confusao: '22%', tempoResp: '15m 40s', visitas: '38m', tentativas: '4.2', desordem: '19%', nota: '7.4' },
+        faixas: [5, 14, 32, 35, 14],
+        vark: [28, 25, 15, 32],
+        disciplinas: [
+          { nome: 'Álgebra e Funções', alto: 14, medio: 9, baixo: 5 },
+          { nome: 'Geometria Espacial', alto: 9, medio: 11, baixo: 8 },
+          { nome: 'História Antiga', alto: 6, medio: 10, baixo: 12 },
+          { nome: 'Física: Cinemática', alto: 7, medio: 10, baixo: 11 },
+          { nome: 'Biologia Celular', alto: 15, medio: 8, baixo: 5 }
+        ]
+      },
+      '1C_30d': {
+        alunos: 32,
+        kpis: { confusao: '18%', tempoResp: '14m 05s', visitas: '50m', tentativas: '3.8', desordem: '16%', nota: '7.9' },
+        faixas: [4, 10, 28, 40, 18],
+        vark: [40, 18, 22, 20],
+        disciplinas: [
+          { nome: 'Álgebra e Funções', alto: 19, medio: 8, baixo: 5 },
+          { nome: 'Geometria Espacial', alto: 14, medio: 12, baixo: 6 },
+          { nome: 'História Antiga', alto: 10, medio: 12, baixo: 10 },
+          { nome: 'Física: Cinemática', alto: 11, medio: 13, baixo: 8 },
+          { nome: 'Biologia Celular', alto: 21, medio: 7, baixo: 4 }
+        ]
+      }
+    };
+
+    let perfChartInstance = null;
+    let varkChartInstance = null;
+
+    function renderDisciplinas(lista) {
+      const container = document.getElementById('contentPerformanceContainer');
+      container.innerHTML = '';
+
+      lista.forEach(disc => {
+        const total = disc.alto + disc.medio + disc.baixo;
+        const cols = total <= 36 ? Math.ceil(total / 2) : 18;
+
+        const row = document.createElement('div');
+        row.className = 'content-row-item';
+
+        let iconsHTML = '';
+        for (let i = 0; i < disc.alto; i++) iconsHTML += '<i class="fa-solid fa-user st-green"></i>';
+        for (let i = 0; i < disc.medio; i++) iconsHTML += '<i class="fa-solid fa-user st-blue"></i>';
+        for (let i = 0; i < disc.baixo; i++) iconsHTML += '<i class="fa-solid fa-user st-red"></i>';
+
+        row.innerHTML = `
+          <span class="content-name">${disc.nome}</span>
+          <div class="student-icons-wrapper">
+            <div class="student-icons-grid" style="--cols: ${cols};">${iconsHTML}</div>
+          </div>
+          <div class="stats-pill">
+            <span style="color: var(--status-green);"><span class="pill-dot" style="background: var(--status-green); width:6px; height:6px; margin-right:2px;"></span>${disc.alto}</span>
+            <span class="stats-divider">|</span>
+            <span style="color: var(--status-blue);"><span class="pill-dot" style="background: var(--status-blue); width:6px; height:6px; margin-right:2px;"></span>${disc.medio}</span>
+            <span class="stats-divider">|</span>
+            <span style="color: var(--status-red);"><span class="pill-dot" style="background: var(--status-red); width:6px; height:6px; margin-right:2px;"></span>${disc.baixo}</span>
+          </div>
+        `;
+        container.appendChild(row);
+      });
+    }
+
+    function initCharts(data) {
+      const ctxPerf = document.getElementById('performanceChart').getContext('2d');
+      perfChartInstance = new Chart(ctxPerf, {
+        type: 'bar',
+        data: {
+          labels: ['0-20%', '21-40%', '41-60%', '61-80%', '81-100%'],
+          datasets: [{
+            data: data.faixas,
+            backgroundColor: ['#c8f7d6', '#94ebb0', '#5ce088', '#38c96b', '#2e8b57'],
+            borderRadius: 6,
+            barPercentage: 0.65
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            datalabels: {
+              anchor: 'end',
+              align: 'top',
+              formatter: value => value + ' alunos',
+              color: '#2c3e50',
+              font: { weight: 'bold', size: 10 }
+            }
+          },
+          scales: {
+            y: { beginAtZero: true, max: 60, grid: { color: '#f0f0f0' } },
+            x: { grid: { display: false } }
+          }
+        }
+      });
+
+      const ctxVark = document.getElementById('varkChart').getContext('2d');
+      varkChartInstance = new Chart(ctxVark, {
+        type: 'pie',
+        data: {
+          labels: ['Visual (V)', 'Auditivo (A)', 'Leitura/Escrita (R)', 'Cinestésico (K)'],
+          datasets: [{
+            data: data.vark,
+            backgroundColor: ['#38bdf8', '#c4b5fd', '#a7f3d0', '#fdba74'],
+            borderColor: '#ffffff',
+            borderWidth: 2
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: 'bottom',
+              labels: { usePointStyle: true, pointStyle: 'circle', boxWidth: 8, padding: 12, font: { size: 11 } }
+            },
+            tooltip: {
+              callbacks: { label: context => ` ${context.label}: ${context.raw}%` }
+            },
+            datalabels: {
+              color: '#1e293b',
+              font: { weight: 'bold', size: 11 },
+              formatter: value => value + '%'
+            }
+          }
+        }
+      });
+    }
+
+    function updateDashboardData() {
+      const classSelect = document.getElementById('classSelect');
+      const periodSelect = document.getElementById('periodSelect');
+      
+      const classVal = classSelect.value;
+      const periodVal = periodSelect.value;
+      const classText = classSelect.options[classSelect.selectedIndex].text.split(' (')[0];
+      const periodText = periodSelect.options[periodSelect.selectedIndex].text;
+
+      document.getElementById('bannerClass').textContent = classText;
+      document.getElementById('bannerPeriod').textContent = periodText;
+
+      const key = `${classVal}_${periodVal}`;
+      let selectedData = datasetsPorFiltro[key] || datasetsPorFiltro[`${classVal}_30d`] || datasetsPorFiltro['3A_30d'];
+
+      let factor = 1;
+      if (periodVal === 'bim1') factor = 0.95;
+      if (periodVal === 'sem1') factor = 1.05;
+
+      document.getElementById('kpiConfusao').textContent = selectedData.kpis.confusao;
+      document.getElementById('kpiTempoResp').textContent = selectedData.kpis.tempoResp;
+      document.getElementById('kpiVisitas').textContent = selectedData.kpis.visitas;
+      document.getElementById('kpiTentativas').textContent = (parseFloat(selectedData.kpis.tentativas) * factor).toFixed(1);
+      document.getElementById('kpiDesordem').textContent = selectedData.kpis.desordem;
+      document.getElementById('kpiNota').textContent = Math.min(10, (parseFloat(selectedData.kpis.nota) * factor)).toFixed(1);
+      document.getElementById('totalAlunosText').textContent = `${selectedData.alunos} alunos`;
+
+      renderDisciplinas(selectedData.disciplinas);
+
+      perfChartInstance.data.datasets[0].data = selectedData.faixas;
+      perfChartInstance.update();
+
+      varkChartInstance.data.datasets[0].data = selectedData.vark;
+      varkChartInstance.update();
+    }
+
+    function forceChartResize() {
+      if (perfChartInstance) perfChartInstance.resize();
+      if (varkChartInstance) varkChartInstance.resize();
+    }
+
+    function toggleExpand(cardId, btnElement) {
+      const card = document.getElementById(cardId);
+      const backdrop = document.getElementById('modalBackdrop');
+      const icon = btnElement.querySelector('i');
+      const isExpanded = card.classList.contains('expanded');
+
+      if (!isExpanded) {
+        closeExpandedCard();
+        card.classList.add('expanded');
+        backdrop.classList.add('active');
+        icon.classList.remove('fa-expand');
+        icon.classList.add('fa-compress');
+        btnElement.title = 'Minimizar gráfico';
+      } else {
+        closeExpandedCard();
+        return;
+      }
+
+      forceChartResize();
+      setTimeout(forceChartResize, 80);
+    }
+
+    function closeExpandedCard() {
+      const expandedCard = document.querySelector('.card-box.expanded');
+      if (expandedCard) {
+        expandedCard.classList.remove('expanded');
+        const btn = expandedCard.querySelector('.expand-btn');
+        if (btn) {
+          const icon = btn.querySelector('i');
+          icon.classList.remove('fa-compress');
+          icon.classList.add('fa-expand');
+          btn.title = 'Ampliar gráfico';
+        }
+      }
+      document.getElementById('modalBackdrop').classList.remove('active');
+      forceChartResize();
+      setTimeout(forceChartResize, 80);
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeExpandedCard();
+    });
+
+    const initialData = datasetsPorFiltro['3A_30d'];
+    renderDisciplinas(initialData.disciplinas);
+    initCharts(initialData);
+  </script>
+
+</body>
+</html>
